@@ -10,9 +10,12 @@ const publicDir = join(here, '..', 'public');
 const iconsDir = join(publicDir, 'icons');
 const tauriIconsDir = join(here, '..', 'src-tauri', 'icons');
 
-const TOP = [124, 92, 255];
-const BOTTOM = [76, 31, 214];
-const GLYPH = [255, 255, 255];
+// Soft paper card + ink teal — reads as a note, not a generic purple tile.
+const PAPER = [248, 246, 241];
+const PAPER_EDGE = [228, 224, 214];
+const INK = [15, 92, 73];
+const INK_SOFT = [47, 140, 116];
+const FOLD = [232, 228, 218];
 
 function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
@@ -36,31 +39,55 @@ function coverage(distance) {
 
 function sample(px, py, size) {
   const s = size;
-  const bg = roundedRectSdf(px, py, s / 2, s / 2, s / 2, s / 2, s * 0.235);
-  const bgAlpha = coverage(bg);
-  if (bgAlpha <= 0) return [0, 0, 0, 0];
+  const pad = s * 0.08;
+  const cardCx = s / 2;
+  const cardCy = s / 2 + s * 0.01;
+  const halfW = s / 2 - pad;
+  const halfH = s / 2 - pad;
+  const radius = s * 0.18;
 
-  const gradient = clamp(py / s);
-  let color = mix(TOP, BOTTOM, gradient);
+  const card = roundedRectSdf(px, py, cardCx, cardCy, halfW, halfH, radius);
+  const cardAlpha = coverage(card);
+  if (cardAlpha <= 0) return [0, 0, 0, 0];
 
-  // Three note lines; the first (title) line is thicker, echoing the app's rule.
-  const lines = [
-    { cy: 0.335, h: 0.052, left: 0.27, right: 0.73, alpha: 1 },
-    { cy: 0.5, h: 0.036, left: 0.27, right: 0.64, alpha: 0.82 },
-    { cy: 0.645, h: 0.036, left: 0.27, right: 0.55, alpha: 0.62 },
-  ];
+  // Subtle top-light paper shading.
+  const shade = clamp((py - pad) / (s - pad * 2));
+  let color = mix(PAPER, PAPER_EDGE, shade * 0.35);
 
-  let glyph = 0;
-  for (const line of lines) {
-    const cx = ((line.left + line.right) / 2) * s;
-    const halfW = ((line.right - line.left) / 2) * s;
-    const halfH = (line.h / 2) * s;
-    const distance = roundedRectSdf(px, py, cx, line.cy * s, halfW, halfH, halfH);
-    glyph = Math.max(glyph, coverage(distance) * line.alpha);
+  // Folded top-right corner.
+  const foldSize = s * 0.22;
+  const foldX0 = cardCx + halfW - foldSize;
+  const foldY0 = cardCy - halfH;
+  const inFold = px >= foldX0 && py <= foldY0 + foldSize && px + py >= foldX0 + foldY0 + foldSize * 0.08;
+  if (inFold) {
+    const foldShade = clamp((px - foldX0) / foldSize);
+    color = mix(FOLD, PAPER_EDGE, foldShade * 0.55);
   }
 
-  color = mix(color, GLYPH, glyph);
-  return [color[0], color[1], color[2], bgAlpha * 255];
+  // Title line (thicker) + two body lines — mirrors first-line-is-title.
+  const lines = [
+    { cy: 0.36, h: 0.055, left: 0.26, right: 0.68, ink: INK, alpha: 1 },
+    { cy: 0.5, h: 0.034, left: 0.26, right: 0.72, ink: INK_SOFT, alpha: 0.85 },
+    { cy: 0.62, h: 0.034, left: 0.26, right: 0.58, ink: INK_SOFT, alpha: 0.65 },
+  ];
+
+  for (const line of lines) {
+    if (inFold && line.cy < 0.42) continue;
+    const cx = ((line.left + line.right) / 2) * s;
+    const halfLineW = ((line.right - line.left) / 2) * s;
+    const halfLineH = (line.h / 2) * s;
+    const distance = roundedRectSdf(px, py, cx, line.cy * s, halfLineW, halfLineH, halfLineH);
+    const g = coverage(distance) * line.alpha;
+    color = mix(color, line.ink, g);
+  }
+
+  // Soft outer rim so the icon doesn't disappear on light launchers.
+  const rim = coverage(Math.abs(card) - 0.8) * (1 - cardAlpha);
+  if (rim > 0) {
+    color = mix(color, PAPER_EDGE, rim * 0.4);
+  }
+
+  return [color[0], color[1], color[2], cardAlpha * 255];
 }
 
 function render(size) {
@@ -162,15 +189,17 @@ function encodeIco(pngs) {
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Plain Note">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#7c5cff" />
-      <stop offset="1" stop-color="#4c1fd6" />
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8f6f1" />
+      <stop offset="1" stop-color="#ebe6dc" />
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="120" fill="url(#g)" />
-  <rect x="138" y="158" width="236" height="28" rx="14" fill="#ffffff" />
-  <rect x="138" y="246" width="190" height="18" rx="9" fill="#ffffff" opacity="0.82" />
-  <rect x="138" y="320" width="140" height="18" rx="9" fill="#ffffff" opacity="0.62" />
+  <rect x="36" y="40" width="440" height="432" rx="92" fill="url(#paper)" />
+  <path d="M340 40 L476 176 L340 176 Z" fill="#e8e4da" />
+  <path d="M340 40 L340 176 L476 176" fill="none" stroke="#d5d0c4" stroke-width="6" />
+  <rect x="118" y="168" width="220" height="28" rx="14" fill="#0f5c49" />
+  <rect x="118" y="246" width="250" height="18" rx="9" fill="#2f8c74" opacity="0.9" />
+  <rect x="118" y="308" width="170" height="18" rx="9" fill="#2f8c74" opacity="0.7" />
 </svg>
 `;
 
@@ -202,4 +231,3 @@ const ico = encodeIco([
 ]);
 writeFileSync(join(tauriIconsDir, 'icon.ico'), ico);
 console.log(`wrote ${join(tauriIconsDir, 'icon.ico')}`);
-

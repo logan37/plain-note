@@ -13,6 +13,7 @@ through **your own** cloud folder instead of ours.
   highlighting.
 - **Organise lightly.** Tags, pinning and favourites.
 - **Lightweight.** React + Vite, no UI framework, one small runtime dependency (`idb`).
+  Android builds ship a single arm64 APK (no universal multi-ABI blob, no PWA worker).
 - **Runs as a PWA, a Windows app, and an Android app** (Tauri 2).
 
 ---
@@ -77,11 +78,18 @@ Commands:
 npm run tauri dev                 # live desktop window
 npm run tauri build               # MSI + NSIS installers in src-tauri/target/release/bundle
 
-# Android
+# Android (keep the APK lean — one ABI, release, no PWA worker)
 npx tauri android init            # once
-npx tauri android dev             # run on a device/emulator
-npx tauri android build           # APK/AAB
+npm run icons                     # regenerate icons + sync into Android mipmaps
+npm run android:dev               # arm64 device/emulator
+npm run android:build             # arm64 release APK (~split-per-abi)
 ```
+
+`android:build` runs `tauri android build --apk --split-per-abi --target aarch64`.
+Install the **arm64-v8a** APK on a real phone. A universal APK that bundles every ABI
+is several times larger and is not what you want for a lightweight notes app.
+
+Debug APKs are also much larger (unstripped native libs) — always prefer release for size checks.
 
 The `src-tauri/capabilities/default.json` grants the filesystem plugin access to `$HOME`,
 `$DOCUMENT`, `$DOWNLOAD`, `$DESKTOP`, `$APPDATA` and `$LOCALDATA` so the folder picker can read and

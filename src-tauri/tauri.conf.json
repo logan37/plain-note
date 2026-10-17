@@ -27,16 +27,18 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["msi", "nsis", "app", "dmg", "deb", "rpm", "apk"],
+    "targets": ["msi", "nsis", "app", "dmg", "deb", "rpm", "appimage"],
     "category": "Productivity",
     "shortDescription": "Encrypted, cloud-synced notes",
     "longDescription": "Lightweight notes with tags, pins and favourites. Notes are encrypted on device and synced as files to a folder you control.",
     "icon": [
       "icons/32x32.png",
+      "icons/64x64.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.png",
-      "icons/icon.ico"
+      "icons/icon.ico",
+      "icons/icon.icns"
     ]
   }
 }

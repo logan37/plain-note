@@ -122,7 +122,11 @@ export function Workspace() {
           >
             <SettingsIcon size={17} />
           </button>
-          <button type="button" className="button button--primary new-note" onClick={() => void newNote()}>
+          <button
+            type="button"
+            className="button button--primary new-note new-note--bar"
+            onClick={() => void newNote()}
+          >
             <PlusIcon size={16} /> <span>New note</span>
           </button>
         </div>
@@ -157,6 +161,16 @@ export function Workspace() {
           />
         </main>
       </div>
+
+      <button
+        type="button"
+        className="fab new-note new-note--fab"
+        title="New note"
+        aria-label="New note"
+        onClick={() => void newNote()}
+      >
+        <PlusIcon size={22} />
+      </button>
 
       {editingId && <NoteEditor noteId={editingId} onClose={() => setEditingId(null)} />}
       {settingsOpen && <SettingsDialog onClose={() => setSettingsOpen(false)} />}

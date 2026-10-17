@@ -11,8 +11,10 @@
     "preview": "vite preview --host",
     "typecheck": "tsc --noEmit",
     "test": "esbuild scripts/smoke.ts scripts/smoke-sync.ts --bundle --platform=node --format=esm --target=node20 --outdir=node_modules/.cache/plain-note-tests --log-level=warning && node node_modules/.cache/plain-note-tests/smoke.js && node node_modules/.cache/plain-note-tests/smoke-sync.js",
-    "icons": "node scripts/make-icons.mjs",
-    "tauri": "tauri"
+    "icons": "node scripts/make-icons.mjs && node scripts/sync-android-icons.mjs",
+    "tauri": "tauri",
+    "android:dev": "tauri android dev --target aarch64",
+    "android:build": "tauri android build --apk --split-per-abi --target aarch64"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.12.4",

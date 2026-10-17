@@ -1,12 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Plain Note">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#7c5cff" />
-      <stop offset="1" stop-color="#4c1fd6" />
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8f6f1" />
+      <stop offset="1" stop-color="#ebe6dc" />
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="120" fill="url(#g)" />
-  <rect x="138" y="158" width="236" height="28" rx="14" fill="#ffffff" />
-  <rect x="138" y="246" width="190" height="18" rx="9" fill="#ffffff" opacity="0.82" />
-  <rect x="138" y="320" width="140" height="18" rx="9" fill="#ffffff" opacity="0.62" />
+  <rect x="36" y="40" width="440" height="432" rx="92" fill="url(#paper)" />
+  <path d="M340 40 L476 176 L340 176 Z" fill="#e8e4da" />
+  <path d="M340 40 L340 176 L476 176" fill="none" stroke="#d5d0c4" stroke-width="6" />
+  <rect x="118" y="168" width="220" height="28" rx="14" fill="#0f5c49" />
+  <rect x="118" y="246" width="250" height="18" rx="9" fill="#2f8c74" opacity="0.9" />
+  <rect x="118" y="308" width="170" height="18" rx="9" fill="#2f8c74" opacity="0.7" />
 </svg>
