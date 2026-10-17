@@ -12,3 +12,8 @@ npm-debug.log*
 # Rust / Tauri
 src-tauri/target/
 src-tauri/gen/
+
+# Release artifacts
+dist-android/
+*.apk
+*.idsig

@@ -1,0 +1,37 @@
+Categories:
+  - Writing
+  - Productivity
+License: MIT
+AuthorName: Logan
+SourceCode: https://github.com/logan37/plain-note
+IssueTracker: https://github.com/logan37/plain-note/issues
+Changelog: https://github.com/logan37/plain-note/releases
+
+AutoName: Plain Note
+
+RepoType: git
+Repo: https://github.com/logan37/plain-note.git
+
+Builds:
+  - versionName: 0.1.0
+    versionCode: 1000
+    commit: 998f97731ec4b97911a70dcdd366dc4a7080be53
+    output: src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
+    srclibs:
+      - rustup@1.28.2
+    ndk: 28.2.13676358
+    sudo:
+      - apt-get update
+      - apt-get install -y clang libclang-dev
+    prebuild:
+      - npm ci
+      - $$rustup$$/rustup-init.sh -y --default-toolchain 1.99.1 --target aarch64-linux-android
+    build:
+      - . $HOME/.cargo/env
+      - ./node_modules/.bin/tauri android init --ci
+      - ./node_modules/.bin/tauri android build --target aarch64 --apk
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+CurrentVersion: 0.1.0
+CurrentVersionCode: 1000

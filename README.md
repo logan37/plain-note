@@ -131,6 +131,64 @@ src/
 - IndexedDB holds only ciphertext; notes are decrypted into memory while unlocked and wiped on lock.
 - A forgotten passphrase cannot be recovered. Keep an **Export encrypted vault** copy somewhere safe.
 
+## Building
+
+```bash
+npm install
+npm run build            # web app (PWA) into dist/
+npm run tauri build      # Windows installers (.msi, NSIS .exe) + plain-note.exe
+npm run android:build    # Android APK (arm64)
+```
+
+Building for Android requires JDK 17, the Android SDK/NDK and a Rust toolchain with the
+`aarch64-linux-android` target. On Windows the Tauri CLI cannot create the `jniLibs`
+symlink; copy `libplain_note_lib.so` into
+`src-tauri/gen/android/app/src/main/jniLibs/arm64-v8a/` and run
+`gradlew.bat assembleRelease` instead.
+
+## Releases and distribution
+
+### Android signing
+
+Release APKs are signed with the project key (kept out of the repo):
+
+- keystore: `C:\Users\Logan\keystores\plain-note.keystore` (alias `plainnote`)
+- password: `C:\Users\Logan\keystores\plain-note.keystore.pass`
+
+**Back the keystore and password up.** Losing them means you can no longer publish updates
+under the same app identity. Sign a built APK with:
+
+```bash
+zipalign -p 4 app-arm64-release-unsigned.apk aligned.apk
+apksigner sign --ks plain-note.keystore --ks-key-alias plainnote \
+  --out plain-note_0.1.0_arm64-v8a.apk aligned.apk
+```
+
+Release assets must be named `plain-note_<version>_arm64-v8a.apk` so the F-Droid
+`Binaries` pattern below resolves (`%v` is the version). Publish with:
+
+```bash
+gh auth login
+gh release create v0.1.0 \
+  --title "Plain Note 0.1.0" --notes-file fastlane/metadata/android/en-US/changelogs/1000.txt \
+  plain-note_0.1.0_arm64-v8a.apk \
+  "src-tauri/target/release/bundle/nsis/Plain Note_0.1.0_x64-setup.exe" \
+  "src-tauri/target/release/bundle/msi/Plain Note_0.1.0_x64_en-US.msi"
+```
+
+### F-Droid
+
+Store listing and build metadata live in the repo:
+
+- `fastlane/metadata/android/en-US/` - title, short/full description, changelog, feature
+  graphic and phone screenshots.
+- `fdroid/app.plainnote.yml` - recipe for the official F-Droid repository (source build).
+- `fdroid/izzy/app.plainnote.yml` - recipe for IzzyOnDroid, which ships the signed APK from
+  the GitHub release via `Binaries:`.
+
+The Tauri source-build recipe is a starting point and has not yet been validated on an
+F-Droid build server; IzzyOnDroid (which uses the prebuilt, signed APK) is the quicker route.
+
 ## License
 
 MIT

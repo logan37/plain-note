@@ -1,0 +1,8 @@
+* First release.
+* The first line of a note becomes its bold title.
+* Tags, pinning and favourites.
+* Instant ranked search with match highlighting.
+* End-to-end encrypted notes (AES-256-GCM, PBKDF2-SHA256).
+* Sync through any folder you choose - Dropbox, Google Drive, iCloud, Syncthing.
+* Encrypted vault export and import, plus Markdown export.
+* Available as a web app, a Windows app and an Android app.

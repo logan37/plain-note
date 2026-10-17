@@ -1,0 +1,18 @@
+Plain Note is a private, offline-first notebook with optional end-to-end encrypted sync through a folder you choose. Your notes are sealed on your device, and you decide where the encrypted files live: Dropbox, Google Drive, OneDrive, iCloud, Syncthing, a NAS or a USB stick.
+
+There is no account, no server of our own, and no analytics.
+
+FEATURES
+
+* First line is the title - the first line of every note is shown as a bold title on the card and in the editor.
+* End-to-end encryption - notes are encrypted with AES-256-GCM using a key derived from your passphrase with PBKDF2-SHA256 (310,000 iterations). The key never leaves your device.
+* Bring your own storage - pick any folder. Plain Note writes encrypted files into it and your cloud provider syncs them for you.
+* Fast search - instant, ranked search across titles, bodies and #tags, with match highlighting.
+* Lightweight organisation - tags, pinning and favourites.
+* Works everywhere - a web app (PWA), a Windows desktop app and an Android app.
+
+PRIVACY
+
+Everything is stored locally and encrypted. The only data that ever leaves your device is the encrypted note files written to the sync folder you choose, and those are moved by your own cloud provider. Plain Note itself never contacts a server and includes no trackers.
+
+Plain Note is free and open source (MIT licensed). Source code: https://github.com/logan37/plain-note
