@@ -1,0 +1,36 @@
+{
+  "name": "plain-note",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Lightweight, encrypted, cloud-synced notes with tags, pins and favourites.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host",
+    "typecheck": "tsc --noEmit",
+    "test": "esbuild scripts/smoke.ts scripts/smoke-sync.ts --bundle --platform=node --format=esm --target=node20 --outdir=node_modules/.cache/plain-note-tests --log-level=warning && node node_modules/.cache/plain-note-tests/smoke.js && node node_modules/.cache/plain-note-tests/smoke-sync.js",
+    "icons": "node scripts/make-icons.mjs",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.12.4",
+    "@tauri-apps/plugin-dialog": "^2.8.3",
+    "@tauri-apps/plugin-fs": "^2.7.1",
+    "idb": "^8.0.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.3",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "fake-indexeddb": "^6.2.6",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.7",
+    "vite-plugin-pwa": "^2.0.0"
+  }
+}
