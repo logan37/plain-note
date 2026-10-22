@@ -6,6 +6,9 @@
   "permissions": [
     "core:default",
     "dialog:default",
+    "android-fs:default",
+    "android-fs:allow-write-file",
+    "android-fs:allow-remove-file",
     "fs:default",
     "fs:allow-read-file",
     "fs:allow-write-file",
@@ -22,7 +25,12 @@
         { "path": "$DOWNLOAD/**" },
         { "path": "$DESKTOP/**" },
         { "path": "$APPDATA/**" },
-        { "path": "$LOCALDATA/**" }
+        { "path": "$LOCALDATA/**" },
+        { "path": "$RESOURCE/**" },
+        { "path": "/storage/**" },
+        { "path": "/sdcard/**" },
+        { "path": "/mnt/**" },
+        { "path": "/data/local/tmp/**" }
       ]
     }
   ]

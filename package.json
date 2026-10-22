@@ -22,7 +22,8 @@
     "@tauri-apps/plugin-fs": "^2.7.1",
     "idb": "^8.0.4",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "tauri-plugin-android-fs-api": "30.2.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.12.3",
